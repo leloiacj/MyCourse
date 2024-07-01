@@ -35,7 +35,7 @@ namespace MyCourse.Controllers
 
         public IActionResult Detail(string id)
         {
-            return Content($"Sono detail e ho ricevuto l'd {id}");
+            return Content($"Sono detail e ho ricevuto l'id {id}");
         }
     }
 }
