@@ -8,20 +8,6 @@ using Microsoft.Extensions.Logging;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 namespace MyCourse.Controllers
 {
     // [Route("[controller]")]
@@ -30,12 +16,12 @@ namespace MyCourse.Controllers
 
         public IActionResult Index()
         {
-            return Content("sono index");
+            return View();
         }
 
-        public IActionResult Detail(string id)
+        public IActionResult Detail()
         {
-            return Content($"Sono detail e ho ricevuto l'id {id}");
+             return View();
         }
     }
 }
