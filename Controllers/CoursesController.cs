@@ -18,14 +18,18 @@ namespace MyCourse.Controllers
 
         public IActionResult Index()
         {
-            var courseService = new CourseService();//Il controller crea un oggetto del servizio aaplicativo che deve utilizzare
-            List<CourseViewModel> courses = courseService.GetServices();//recupero la lista dei corsi 
+            var courseService = new CourseService();//Il controller crea un oggetto del servizio applicativo che deve utilizzare
+            List<CourseViewModel> courses = courseService.GetCourses();//recupero la lista dei corsi 
             return View(courses);//passo l'oggetto contenente la lista dei corsi alla view per mostrare i dati
         }
 
-        public IActionResult Detail()
+        //azione che deve recuperare i dati del corso con id = id parametro
+        //e popolare la view Detail.cshtml con i dati del corso recuperato
+        public IActionResult Detail(int id)
         {
-            return View();
+            var courseService = new CourseService();
+            CourseDetailViewModel viewModel = courseService.GetCourse(id);
+            return View(viewModel);
         }
     }
 }
