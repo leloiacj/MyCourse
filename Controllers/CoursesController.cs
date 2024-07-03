@@ -25,6 +25,7 @@ namespace MyCourse.Controllers
         {
             //var courseService = new CourseService();//Il controller crea un oggetto del servizio applicativo che deve utilizzare
             List<CourseViewModel> courses = courseService.GetCourses();//recupero la lista dei corsi 
+            ViewData["Title"] = "Catalogo dei corsi";
             return View(courses);//passo l'oggetto contenente la lista dei corsi alla view per mostrare i dati
         }
 
@@ -34,6 +35,7 @@ namespace MyCourse.Controllers
         {
             //var courseService = new CourseService();
             CourseDetailViewModel viewModel = courseService.GetCourse(id);
+            ViewData["Title"] = viewModel.Title;
             return View(viewModel);
         }
     }
