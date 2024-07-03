@@ -7,7 +7,7 @@ using MyCourse.Models.Enums;
 
 namespace MyCourse.Models.Services.Application
 {
-    public class CourseService
+    public class CourseService:ICourseService
     {
         //metodo che deve tornare la lista dei corsi 
         //per adesso creiamo un algoritmo che crea dei corsi random
