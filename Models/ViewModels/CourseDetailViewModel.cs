@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace MyCourse.Models.ViewModels
 {
     //classe che eredita da CourseViewModel e aggiunge la descrizione(che nella pagina index non mi serviva)
-    //e la lista di lezioni associate al corso
+    //e la lista di lezioni associate al corso.
     public class CourseDetailViewModel : CourseViewModel
     {
         public string Description { get; set; }
