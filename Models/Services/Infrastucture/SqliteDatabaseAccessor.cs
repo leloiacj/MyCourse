@@ -21,10 +21,12 @@ namespace MyCourse.Models.Services.Infrastucture
                     {
                         var dataSet = new DataSet();
                         dataSet.EnforceConstraints = false;
-                        var dataTable = new DataTable();
-                        dataSet.Tables.Add(dataTable);
-                        dataTable.Load(reader);
-
+                        do{
+                            var dataTable = new DataTable();
+                            dataSet.Tables.Add(dataTable);
+                            dataTable.Load(reader);
+                        } while (!reader.IsClosed);//la proprietà IsClosed mi permette di controlare se tutti i dati sono stati letti o meno da db
+                        
                         return dataSet;
 
                     }
