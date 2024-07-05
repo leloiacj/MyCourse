@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyCourse.Models.Services.Application;
 using MyCourse.Models.ViewModels;
+using MyCourse.Models.InputModels;
+
+
 
 
 
@@ -17,7 +20,8 @@ namespace MyCourse.Controllers
     {
         private readonly ICourseService courseService;
 
-        public CoursesController(ICourseService courseService){
+        public CoursesController(ICourseService courseService)
+        {
             this.courseService = courseService;
         }
 
@@ -37,6 +41,21 @@ namespace MyCourse.Controllers
             CourseDetailViewModel viewModel = courseService.GetCourse(id);
             ViewData["Title"] = viewModel.Title;
             return View(viewModel);
+        }
+
+        public IActionResult Create()
+        {
+            ViewData["Title"] = "Nuovo corso";
+            var input = new CourseCreateInputModel();
+            return View(input);
+        }
+
+        [HttpPost]
+        public IActionResult Create(CourseCreateInputModel input)
+        {
+            ViewData["Title"] = "Nuovo corso";
+            CourseDetailViewModel course = courseService.CreateCourse(input);//metodo che deve eseguire la query INSERT INTO nel db usando il titolo che ho inserito nel form
+            return RedirectToAction(nameof(Index));
         }
     }
 }

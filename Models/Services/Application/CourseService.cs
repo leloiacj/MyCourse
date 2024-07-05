@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MyCourse.Models.ViewModels;
 using MyCourse.Models.Enums;
+using MyCourse.Models.InputModels;
 
 namespace MyCourse.Models.Services.Application
 {
@@ -65,6 +66,10 @@ namespace MyCourse.Models.Services.Application
             }
 
             return course;
+        }
+
+        public CourseDetailViewModel CreateCourse(CourseCreateInputModel input){
+            throw new NotImplementedException();
         }
     }
 }

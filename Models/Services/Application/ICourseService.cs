@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MyCourse.Models.InputModels;
 using MyCourse.Models.ViewModels;
 
 namespace MyCourse.Models.Services.Application
@@ -10,5 +11,7 @@ namespace MyCourse.Models.Services.Application
     {
             List<CourseViewModel> GetCourses();
             CourseDetailViewModel GetCourse(int id);
+
+            CourseDetailViewModel CreateCourse(CourseCreateInputModel input);
     }
 }

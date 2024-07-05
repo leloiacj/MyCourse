@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 using MyCourse.Models.Services.Infrastucture;
 using MyCourse.Models.ViewModels;
 using System.Data;
+using MyCourse.Models.InputModels;
+using MyCourse.Controllers;
+
 
 namespace MyCourse.Models.Services.Application
 {
@@ -64,6 +67,44 @@ namespace MyCourse.Models.Services.Application
             }
 
             return courseDetailViewModel;
+        }
+
+        public CourseDetailViewModel CreateCourse(CourseCreateInputModel input){
+            string title = input.Title;//nella variabile title viene memorizzato il valore che l'utente inserisce nel form di create.cshtml
+            string author = "Pippo Pippo";
+            var dataSet = new DataSet();
+
+            Console.WriteLine($"Title: {title}");
+
+            FormattableString query = $@"INSERT INTO Courses (Title, Author, ImagePath, CurrentPrice_Currency, CurrentPrice_Amount, FullPrice_Currency, FullPrice_Amount) VALUES
+            ('{title}', '{author}', '/Courses/default.png', 'EUR', 0, 'EUR', 0);";
+            /*string query = "INSERT INTO Courses (Title, Author, ImagePath, CurrentPrice_Currency, CurrentPrice_Amount, FullPrice_Currency, FullPrice_Amount) " + 
+            "VALUES(@title, @author, '/Courses/default.png', 'EUR', 0, 'EUR', 0) ";*/
+            var rowUpdated = db.QueryInsert(query);
+            if(rowUpdated != 1){
+                throw new InvalidOperationException("Errore nell'inserimento del corso");
+            }else{
+                Console.WriteLine("Corso inserito correttamente");
+                dataSet = SelectLastId();//chiamo il metodo SelectLastId() che mi restituisce il dataSet con l'id dell'ultimo corso inserito nel db
+            }
+
+            int courseId = Convert.ToInt32(dataSet.Tables[0].Rows[0][0]);//accedo alla prima riga della prima tabella e alla prima colonna della prima riga
+            CourseDetailViewModel course = GetCourse(courseId);
+            return course;
+
+        }
+
+        //metodo che recupero l'ultimo id inserito nel db
+        private DataSet SelectLastId(){
+            FormattableString query = $"SELECT last_insert_rowid();";
+            var dataSet = db.Query(query);//query che seleziona l'id dell'ultima riga inserita nel db
+            var courseDataTable = dataSet.Tables[0];//accedo dal dataSet alla prima tabella cioè a quella che è stata restituita dall'esecuzione dell aprima query
+            if(courseDataTable.Rows.Count != 1){//sto controllando se la tabella ha recuperato esattamente un dato/corso
+                throw new InvalidOperationException($"Corso non trovato");
+            }
+            
+
+            return dataSet;
         }
 
 
