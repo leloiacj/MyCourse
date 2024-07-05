@@ -21,7 +21,7 @@ namespace MyCourse.Models.Services.Application
         public List<CourseViewModel> GetCourses()
         {
             //query che verrà eseguita nel database
-            string query = "SELECT Id, Title, ImagePath, Author,Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses";
+            FormattableString query = $"SELECT Id, Title, ImagePath, Author,Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses";
             //un oggetto di tipo DataSet è un insieme di oggetti di tipo DataTable
             DataSet dataSet = db.Query(query); 
 
@@ -44,8 +44,9 @@ namespace MyCourse.Models.Services.Application
         public CourseDetailViewModel GetCourse(int id)
         {
             //In un'unica variabile string io inserisco tutte le query che devono essere eseguite
-            string query = "SELECT Id, Title, Description, ImagePath, Author,Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses WHERE Id =" 
-            + id + "; SELECT Id, Title, Description, Duration FROM Lessons WHERE CourseId =" + id;
+            FormattableString query = $@"SELECT Id, Title, Description, ImagePath, Author,Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses WHERE Id ={id}
+            ; SELECT Id, Title, Description, Duration FROM Lessons WHERE CourseId ={id}";
+            
             //in questo dataSet ci saranno due tabelle: la prima con i dati del corso e la seconda con i dati delle lezioni del corso
             DataSet dataSet = db.Query(query);
             var courseDataTable = dataSet.Tables[0];//accedo dal dataSet alla prima tabella cioè a quella che è stata restituita dall'esecuzione dell aprima query
