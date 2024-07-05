@@ -8,6 +8,8 @@ namespace MyCourse.Models.Services.Infrastucture
 {
     public interface IDatabaseAccessor
     {
-        DataSet Query(FormattableString query);
+        DataSet Query(FormattableString formattableQuery);
+        int QueryInsert(FormattableString formattableQuery);
+         //int QueryInsert(string query);
     }
 }
