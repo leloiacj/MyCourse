@@ -16,7 +16,8 @@ namespace MyCourse.Models.Services.Application
         //Questo servizio applicativo utilizza l'interfaccia IDatabaseAccessor per accedere al database
         private readonly IDatabaseAccessor db;
 
-        public AdoNetCourseService(IDatabaseAccessor db){
+        public AdoNetCourseService(IDatabaseAccessor db)
+        {
             this.db = db;
         }
 
@@ -26,7 +27,7 @@ namespace MyCourse.Models.Services.Application
             //query che verrà eseguita nel database
             FormattableString query = $"SELECT Id, Title, ImagePath, Author,Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses";
             //un oggetto di tipo DataSet è un insieme di oggetti di tipo DataTable
-            DataSet dataSet = db.Query(query); 
+            DataSet dataSet = db.Query(query);
 
             //Un dataTable è una tabella in cui vengono memorizzati i dati recuperati da una SELECT nel db
             //dato che in un dataSet possono esserci più tabelle, con l'indice accedo all'i-esima tabella
@@ -34,7 +35,8 @@ namespace MyCourse.Models.Services.Application
             var courseList = new List<CourseViewModel>();
             //scorro l'oggetto DataTable riga per riga tramite la proprietà Rows
             //per ogni riga (oggetto DataRow) leggi i dati e crea l'oggetto CourseViewModel
-            foreach(DataRow courseRow in dataTable.Rows){
+            foreach (DataRow courseRow in dataTable.Rows)
+            {
                 var course = CourseViewModel.FromDataRow(courseRow);
                 courseList.Add(course);
             }
@@ -49,19 +51,21 @@ namespace MyCourse.Models.Services.Application
             //In un'unica variabile string io inserisco tutte le query che devono essere eseguite
             FormattableString query = $@"SELECT Id, Title, Description, ImagePath, Author,Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses WHERE Id ={id}
             ; SELECT Id, Title, Description, Duration FROM Lessons WHERE CourseId ={id}";
-            
+
             //in questo dataSet ci saranno due tabelle: la prima con i dati del corso e la seconda con i dati delle lezioni del corso
             DataSet dataSet = db.Query(query);
             var courseDataTable = dataSet.Tables[0];//accedo dal dataSet alla prima tabella cioè a quella che è stata restituita dall'esecuzione dell aprima query
-            if(courseDataTable.Rows.Count != 1){//sto controllando se la tabella ha recuperato esattamente un dato/corso
+            if (courseDataTable.Rows.Count != 1)
+            {//sto controllando se la tabella ha recuperato esattamente un dato/corso
                 throw new InvalidOperationException($"Corso con id = {id} non trovato");
             }
             var courseRow = courseDataTable.Rows[0];//accedo alla prima riga della tabella
             var courseDetailViewModel = CourseDetailViewModel.FromDataRow(courseRow);
-            
-            
+
+
             var lessonDataTable = dataSet.Tables[1];//accedo dal dataSet alla seconda tabella cioè a quella che è stata restituita dall'esecuzione della seconda query
-            foreach(DataRow lessonRow in lessonDataTable.Rows){
+            foreach (DataRow lessonRow in lessonDataTable.Rows)
+            {
                 var lesson = LessonViewModel.FromDataRow(lessonRow);
                 courseDetailViewModel.Lessons.Add(lesson);
             }
@@ -69,43 +73,17 @@ namespace MyCourse.Models.Services.Application
             return courseDetailViewModel;
         }
 
-        public CourseDetailViewModel CreateCourse(CourseCreateInputModel input){
-            string title = input.Title;//nella variabile title viene memorizzato il valore che l'utente inserisce nel form di create.cshtml
-            string author = "Pippo Pippo";
-            var dataSet = new DataSet();
-
-            Console.WriteLine($"Title: {title}");
-
-            FormattableString query = $@"INSERT INTO Courses (Title, Author, ImagePath, CurrentPrice_Currency, CurrentPrice_Amount, FullPrice_Currency, FullPrice_Amount) VALUES
-            ('{title}', '{author}', '/Courses/default.png', 'EUR', 0, 'EUR', 0);";
-            /*string query = "INSERT INTO Courses (Title, Author, ImagePath, CurrentPrice_Currency, CurrentPrice_Amount, FullPrice_Currency, FullPrice_Amount) " + 
-            "VALUES(@title, @author, '/Courses/default.png', 'EUR', 0, 'EUR', 0) ";*/
-            var rowUpdated = db.QueryInsert(query);
-            if(rowUpdated != 1){
-                throw new InvalidOperationException("Errore nell'inserimento del corso");
-            }else{
-                Console.WriteLine("Corso inserito correttamente");
-                dataSet = SelectLastId();//chiamo il metodo SelectLastId() che mi restituisce il dataSet con l'id dell'ultimo corso inserito nel db
-            }
-
-            int courseId = Convert.ToInt32(dataSet.Tables[0].Rows[0][0]);//accedo alla prima riga della prima tabella e alla prima colonna della prima riga
+        public CourseDetailViewModel CreateCourse(CourseCreateInputModel input)
+        {
+            string title = input.Title;
+            string author = "Mario Rossi";
+            var dataSet = db.Query($@"INSERT INTO Courses (Title, Author, ImagePath, CurrentPrice_Currency, CurrentPrice_Amount, FullPrice_Currency, FullPrice_Amount) VALUES ({title}, {author}, '/Courses/default.png', 'EUR', 0, 'EUR', 0);
+            SELECT last_insert_rowid();");
+            int courseId = Convert.ToInt32(dataSet.Tables[0].Rows[0][0]);
             CourseDetailViewModel course = GetCourse(courseId);
             return course;
-
         }
 
-        //metodo che recupero l'ultimo id inserito nel db
-        private DataSet SelectLastId(){
-            FormattableString query = $"SELECT last_insert_rowid();";
-            var dataSet = db.Query(query);//query che seleziona l'id dell'ultima riga inserita nel db
-            var courseDataTable = dataSet.Tables[0];//accedo dal dataSet alla prima tabella cioè a quella che è stata restituita dall'esecuzione dell aprima query
-            if(courseDataTable.Rows.Count != 1){//sto controllando se la tabella ha recuperato esattamente un dato/corso
-                throw new InvalidOperationException($"Corso non trovato");
-            }
-            
-
-            return dataSet;
-        }
 
 
     }
