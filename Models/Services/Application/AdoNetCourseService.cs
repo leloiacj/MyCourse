@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MyCourse.Models.Services.Infrastucture;
+using MyCourse.Models.Services.Infrastructure;
 using MyCourse.Models.ViewModels;
 using System.Data;
 using MyCourse.Models.InputModels;

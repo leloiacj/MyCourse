@@ -6,7 +6,7 @@ using System.Data;
 using Microsoft.Data.Sqlite;
 
 
-namespace MyCourse.Models.Services.Infrastucture
+namespace MyCourse.Models.Services.Infrastructure
 {
     public class SqliteDatabaseAccessor : IDatabaseAccessor
     {
