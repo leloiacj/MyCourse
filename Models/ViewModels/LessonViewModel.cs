@@ -14,6 +14,7 @@ namespace MyCourse.Models.ViewModels
         public string Title { get; set; }
         public TimeSpan Duration { get; set; }//proprietà per settare la durata della lezione
 
+        public string Description {get; set;}
         public static LessonViewModel FromDataRow(DataRow dataRow)
         {
             var lessonViewModel = new LessonViewModel
