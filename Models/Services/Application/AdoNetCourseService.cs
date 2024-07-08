@@ -83,8 +83,5 @@ namespace MyCourse.Models.Services.Application
             CourseDetailViewModel course = GetCourse(courseId);
             return course;
         }
-
-
-
     }
 }
