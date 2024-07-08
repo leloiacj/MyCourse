@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using MyCourse.Models.Entities;
+
 
 namespace MyCourse.Models.Entities
 {
@@ -21,12 +23,11 @@ namespace MyCourse.Models.Entities
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                //istruzione che mi connette al database tramite connection string
-                optionsBuilder.UseSqlite("Data Source=Data/MyCourse.db");
-            }
+
+            // #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+            //istruzione che mi connette al database tramite connection string
+            optionsBuilder.UseSqlite("Data Source=Data/MyCourse.db");
+
         }
 
         //metodo che mi permette di configurare tutte le classi entità con le tabelle del database
@@ -57,10 +58,10 @@ namespace MyCourse.Models.Entities
                 .HasForeignKey(lesson => lesson.CourseId);//indico che la chiave esterna è il campo CourseId dell'entità Lesson
 
 
-                modelBuilder.Entity<Lessons>(entity =>
+                modelBuilder.Entity<Lesson>(e =>
                 {
-                    entity.ToTable("Lessons");//associo l'entità Lesson alla tabella Lessons del db
-                    entity.HasKey(lesson => lesson.Id);//indicco la chiave primaria di Lesson
+                    e.ToTable("Lessons");//associo l'entità Lesson alla tabella Lessons del db
+                    e.HasKey(lesson => lesson.Id);//indicco la chiave primaria di Lesson
 
                     //mappatuta della proprietà Title di Lesson superflua
                     //perchè se la proprietà dell'entità ha lo stesso identico nome del campo nella tabella del db
@@ -70,9 +71,9 @@ namespace MyCourse.Models.Entities
                     //entity.Property(entity => entity.Title).HasColumnName("Title").HasColumnType("TEXT");
 
                     //la proprietà Course nella classe Lesson rappresenta il lato 1
-                    entity.HasOne(d => d.Course)
-                        .WithMany(p => p.Lessons)//che si riferisce lato N alla proprietà Lessons dell'entità Course
-                        .HasForeignKey(d => d.CourseId);
+                    e.HasOne(lesson => lesson.Course)
+                        .WithMany(course => course.Lessons)//che si riferisce lato N alla proprietà Lessons dell'entità Course
+                        .HasForeignKey(lesson => lesson.CourseId);
                 });
             });
         }
