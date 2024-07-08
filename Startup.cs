@@ -10,7 +10,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MyCourse.Models.Services.Application;
-using MyCourse.Models.Services.Infrastucture;
+using MyCourse.Models.Services.Infrastructure;
+using MyCourse.Models.ViewModels;
+using MyCourse.Models.Entities;
+
+// using MyCourse.Models.Services.Infrastructure.MyCourseDbContext;
+
+// using MyCourse.Models.Services.Infrastructure.MyCourseDbContext;
+
 
 namespace MyCourse
 {
@@ -35,8 +42,10 @@ namespace MyCourse
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddTransient<ICourseService, AdoNetCourseService>();
+            services.AddTransient<ICourseService, EfCoreCourseService>();
             services.AddTransient<IDatabaseAccessor, SqliteDatabaseAccessor>();
+            //metodo per indicare che l'app usa la classe MyCourseDbContext come DbContext
+            services.AddDbContext<MyCourseDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
