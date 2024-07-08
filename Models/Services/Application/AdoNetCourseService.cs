@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 using MyCourse.Models.Services.Infrastucture;
 using MyCourse.Models.ViewModels;
 using System.Data;
+using MyCourse.Models.InputModels;
+using MyCourse.Controllers;
+
 
 namespace MyCourse.Models.Services.Application
 {
@@ -48,25 +51,39 @@ namespace MyCourse.Models.Services.Application
             //In un'unica variabile string io inserisco tutte le query che devono essere eseguite
             FormattableString query = $@"SELECT Id, Title, Description, ImagePath, Author,Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses WHERE Id ={id}
             ; SELECT Id, Title, Description, Duration FROM Lessons WHERE CourseId ={id}";
-            
+
             //in questo dataSet ci saranno due tabelle: la prima con i dati del corso e la seconda con i dati delle lezioni del corso
             DataSet dataSet = db.Query(query);
             var courseDataTable = dataSet.Tables[0];//accedo dal dataSet alla prima tabella cioè a quella che è stata restituita dall'esecuzione dell aprima query
-            if(courseDataTable.Rows.Count != 1){//sto controllando se la tabella ha recuperato esattamente un dato/corso
+            if (courseDataTable.Rows.Count != 1)
+            {//sto controllando se la tabella ha recuperato esattamente un dato/corso
                 throw new InvalidOperationException($"Corso con id = {id} non trovato");
             }
             var courseRow = courseDataTable.Rows[0];//accedo alla prima riga della tabella
             var courseDetailViewModel = CourseDetailViewModel.FromDataRow(courseRow);
-            
-            
+
+
             var lessonDataTable = dataSet.Tables[1];//accedo dal dataSet alla seconda tabella cioè a quella che è stata restituita dall'esecuzione della seconda query
-            foreach(DataRow lessonRow in lessonDataTable.Rows){
+            foreach (DataRow lessonRow in lessonDataTable.Rows)
+            {
                 var lesson = LessonViewModel.FromDataRow(lessonRow);
                 courseDetailViewModel.Lessons.Add(lesson);
             }
 
             return courseDetailViewModel;
         }
+
+        public CourseDetailViewModel CreateCourse(CourseCreateInputModel input)
+        {
+            string title = input.Title;
+            string author = "Mario Rossi";
+            var dataSet = db.Query($@"INSERT INTO Courses (Title, Author, ImagePath, CurrentPrice_Currency, CurrentPrice_Amount, FullPrice_Currency, FullPrice_Amount) VALUES ({title}, {author}, '/Courses/default.png', 'EUR', 0, 'EUR', 0);
+            SELECT last_insert_rowid();");
+            int courseId = Convert.ToInt32(dataSet.Tables[0].Rows[0][0]);
+            CourseDetailViewModel course = GetCourse(courseId);
+            return course;
+        }
+
 
 
     }
