@@ -14,6 +14,10 @@ namespace MyCourse.Models.ViewModels
         public string Description { get; set; }
         public List<LessonViewModel> Lessons { get; set; }
 
+
+        public CourseDetailViewModel(){
+            Lessons = new List<LessonViewModel>();
+        }
         //metodo per sommare le ore totali di lezione del corso
         public TimeSpan TotalCourseDuration
         {

@@ -10,7 +10,7 @@ namespace MyCourse.Models.Entities
         public int CourseId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public string Duration { get; set; }
+        public TimeSpan Duration { get; set; }
 
         public Course Course { get; set; }//oggetto che rappresenta la relazione molti a uno tra lezione e corso
 
